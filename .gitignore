@@ -3,4 +3,4 @@
 !/unpackage/res/*
 /.idea/*
 /.hbuilderx/*
-/common/data/classify.data.js
+/common/data/*

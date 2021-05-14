@@ -9,7 +9,7 @@
 			 :scroll-into-view="itemId">
 				<view v-for="(item,index) in tabbar" :key="index" class="u-tab-item" :class="[current == index ? 'u-tab-item-active' : '']"
 				 @tap.stop="swichMenu(index)">
-					<text class="u-line-1">{{item.name}}</text>
+					<text class="u-line-1 text-sm">{{item.name}}</text>
 				</view>
 			</scroll-view>
 			<scroll-view :scroll-top="scrollRightTop" scroll-y scroll-with-animation class="right-box" @scroll="rightScroll">
@@ -23,7 +23,7 @@
 								<view class="cu-avatar round lg bg-red">{{index1+1}}</view>
 								<view class="content">
 									<view class="text-grey">
-										<text class="text-lg text-black  text-cut">{{item1.voicesName}}</text>
+										<text class="text-df text-black  text-cut">{{item1.voicesName}}</text>
 									</view>
 									<view class="text-gray text-sm flex">
 										<text class="text-cut">{{item1.voicesDes}}</text>
@@ -379,5 +379,9 @@
 
 	.modal_main {
 		background-color: #FFFFFF;
+	}
+	.cu-list.menu-avatar>.cu-item .action {
+		width: 120upx;
+		text-align: center
 	}
 </style>

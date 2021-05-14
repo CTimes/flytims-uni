@@ -36,11 +36,9 @@
 
 <script>
 	import addTip from "@/components/wxcomponents/struggler-uniapp-add-tip/struggler-uniapp-add-tip"
-	import LikeFx from '@/components/likeFx/likeFx.vue'
 	export default {
 		components: {
-			addTip,
-			LikeFx
+			addTip
 		},
 		data() {
 			return {
@@ -77,7 +75,6 @@
 			};
 		},
 		onLoad() {
-			this._startLikeAnimation();
 		},
 		methods: {
 			// 跳转
@@ -91,13 +88,7 @@
 			// 隐藏
             hideModal(e) {
                 this.modalName = null
-            },
-			// 动画
-			_startLikeAnimation() {
-				this.animation_timer = setInterval(() => {
-					this.$refs.likeFx.likeClick()
-				}, 300)
-			}
+            }
 		}
 	}
 </script>
