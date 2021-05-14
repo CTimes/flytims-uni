@@ -45,7 +45,9 @@
 				<view class="modal_bg"></view>
 				<view class="modal_main" @click="copy">
 					<view class="content text-black text-bold" >点击复制下载链接</view>
-					<view class='margin-top'>{{downloadUrl}}</view>
+					<view class='margin-top'>
+						<text class="text-gray text-sm text-cut">{{downloadUrl}}</text>
+					</view>
 				</view>
 			</view>
 		</view>
