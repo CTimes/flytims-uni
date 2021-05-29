@@ -20,7 +20,7 @@
 						</view>
 						<view class="cu-list menu-avatar" v-for="(item1, index1) in item.voices" :key="index1" >
 							<view class="cu-item" @tap="showModal" data-target="Modal" :data-detail="item1">
-								<view class="cu-avatar round lg bg-red">{{index1+1}}</view>
+								<view class="cu-avatar lg">{{index1+1}}</view>
 								<view class="content">
 									<view class="text-grey">
 										<text class="text-df text-black  text-cut">{{item1.voicesName}}</text>
