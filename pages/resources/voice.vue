@@ -54,7 +54,7 @@
 	</view>
 </template>
 <script>
-	import classifyData from '@/common/data/classify.data.js';
+	import classifyData from '@/common/data/voicedata.js';
 	import h5Copy from '@/common/jsSdk/junyi-h5-copy/junyi-h5-copy.js'
 	export default {
 		data() {
