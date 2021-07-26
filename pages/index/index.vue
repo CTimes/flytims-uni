@@ -52,16 +52,22 @@
                         toPage: '',
 						color: ''
 					},
+					// {
+					// 	title: 'voice',
+					// 	name: '有声读书',
+                    //     toPage: '/pages/books/voice',
+					// 	color: ''
+					// },
 					{
-						title: 'voice',
+						title: 'books',
 						name: '有声读书',
-                        toPage: '/pages/resources/voice',
+					    toPage: '/pages/books/design',
 						color: ''
 					},
 					{
 						title: 'about',
 						name: '关于',
-						toPage: '/pages/resources/about',
+						toPage: '/pages/books/about',
 						color: ''
 					}
 				]

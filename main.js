@@ -13,6 +13,9 @@ import Section from './components/section/section.vue'
 
 import { request } from './api/server.js'
 
+// 引入uView对小程序分享的mixin封装
+let mpShare = require('uview-ui/libs/mixin/mpShare.js');
+Vue.mixin(mpShare)
 // var vuexStore = require("./store/$u.mixin.js") // require 方式报错
 import vuexStore from "./common/store/$u.mixin.js"
 Vue.mixin(vuexStore)
