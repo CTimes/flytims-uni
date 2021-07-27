@@ -3,6 +3,9 @@
 		<fly-custom bgColor="bg-gradual-blue" :isBack="true">
 			<block slot="content"></block>
 		</fly-custom>
+
+		<u-notice-bar mode="horizontal" type="primary" :list="listBar"></u-notice-bar>
+
 		<!-- 二级联动 -->
 		<view class="u-menu-wrap">
 			<scroll-view scroll-y scroll-with-animation class="u-tab-view menu-scroll-view" :scroll-top="scrollTop"
@@ -19,7 +22,7 @@
 							<text>{{item.name}}</text>
 						</view>
 						<view class="cu-list menu-avatar" v-for="(item1, index1) in item.voices" :key="index1" >
-							<view class="cu-item" @tap="showModal" data-target="Modal" :data-detail="item1">
+							<view class="cu-item" @click="shareFc(item1.image,item1.downloadUrl)" data-target="Modal" :data-detail="item1">
 								<view class="cu-avatar lg">{{index1+1}}</view>
 								<view class="content">
 									<view class="text-grey">
@@ -31,7 +34,6 @@
 								</view>
 								<view class="action">
 									<view class="text-grey text-xs">{{item1.voicesUpdate}}</view>
-									<view class="cu-tag round bg-grey sm">{{item1.downlodNum}}</view>
 								</view>
 							</view>
 						</view>
@@ -39,12 +41,35 @@
 				</view>
 			</scroll-view>
 		</view>
+		<!-- 加载更多 -->
+		<u-loadmore bg-color="rgb(240, 240, 240)" :status="loadStatus" @loadmore="addRandomData"></u-loadmore>
+
+		<!-- 图片展示由自己实现 -->
+		<view class="flex_row_c_c modalView" :class="qrShow?'show':''">
+			<view class="flex_column">
+				<view class="backgroundColor-white padding1vh border_radius_10px">
+					<image :src="poster.finalPath || ''" mode="widthFix" class="posterImage"></image>
+				</view>
+				<view class="flex_row marginTop2vh">
+					<button open-type="share" plain="true" style="background: #0081ff; color: #FFFFFF;" type="default"
+							size="mini">点击分享
+					</button>
+				</view>
+			</view>
+		</view>
+
+		<!-- 画布 -->
+		<view class="hideCanvasView">
+			<canvas class="hideCanvas" canvas-id="default_PosterCanvasId"
+					:style="{width: (poster.width||10) + 'px', height: (poster.height||10) + 'px'}"></canvas>
+		</view>
+
 		<!-- 弹窗确认 -->
-		<view class="cu-modal" :class="modalName=='Modal'?'show':''" @tap="hideModal">
+		<view class="cu-modal" :class="cpShow?'show':''" @tap="copy">
 			<view class="cu-dialog">
 				<view class="modal_bg"></view>
-				<view class="modal_main" @click="copy">
-					<view class="content text-black text-bold" >点击复制下载链接</view>
+				<view class="modal_main">
+					<view class="content text-black text-bold">点击复制下载链接</view>
 					<view class='margin-top'>
 						<text class="text-gray text-sm text-cut">{{downloadUrl}}</text>
 					</view>
@@ -55,7 +80,11 @@
 </template>
 <script>
 	import classifyData from '@/common/data/voicedata.js';
-	import h5Copy from '@/common/jsSdk/junyi-h5-copy/junyi-h5-copy.js'
+	import h5Copy from '@/common/jsSdk/junyi-h5-copy/junyi-h5-copy.js';
+	import _app from '@/components/QS-SharePoster/app.js';
+	import {
+		getSharePoster
+	} from '@/components/QS-SharePoster/QS-SharePoster.js';
 	export default {
 		data() {
 			return {
@@ -73,6 +102,15 @@
 				customBarHeight: this.CustomBar,
 				modalName: null,
 				downloadUrl: '下载链接',
+				poster: {},
+				qrShow: false,
+				canvasId: 'default_PosterCanvasId',
+				cpShow: false,
+				is_share_show: false,
+				listBar: [
+					'不定时更新资源，扫码关注小程序',
+					'没有想听的有声书，请联系作者'
+				],
 			}
 		},
 		onLoad() {
@@ -80,6 +118,13 @@
 		},
 		onReady() {
 			this.getMenuItemTop()
+		},
+		onShow() {
+			if (this.is_share_show == true) {
+				this.is_share_show = false;
+				this.cpShow = true
+				this.cpShow = true;
+			}
 		},
 		methods: {
 			// 点击左边的栏目切换
@@ -186,28 +231,120 @@
 					}
 				}, 10)
 			},
-			showModal(e) {
-				this.downloadUrl = e.currentTarget.dataset.detail.downloadUrl
-				console.log(this.downloadUrl)
-				this.modalName = e.currentTarget.dataset.target
+			// 构造分享图片
+			async shareFc(imgUrl,download) {
+				try {
+					this.downloadUrl = download;
+					if(!imgUrl){
+						imgUrl = '../../static/img/wx.png';
+					}
+					_app.log('准备生成:' + new Date())
+					const d = await getSharePoster({
+						_this: this, //若在组件中使用 必传
+						type: 'testShareType',
+						formData: {
+							//访问接口获取背景图携带自定义数据
+						},
+						backgroundImage: imgUrl,
+						// backgroundImage: imgUrl,
+						posterCanvasId: this.canvasId, //canvasId
+						delayTimeScale: 20, //延时系数
+						drawArray: ({
+										bgObj,
+										type,
+										bgScale
+									}) => {
+							//可直接return数组，也可以return一个promise对象, 但最终resolve一个数组, 这样就可以方便实现后台可控绘制海报
+							return new Promise((rs, rj) => {
+								rs([{
+									type: 'custom',
+									setDraw(Context) {
+										Context.setFillStyle('black');
+										Context.setGlobalAlpha(0.3);
+										Context.fillRect(0, bgObj.height - bgObj
+												.width * 0.3, bgObj.width, bgObj
+												.width * 0.3);
+										Context.setGlobalAlpha(1);
+									}
+								},
+									{
+										type: 'image',
+										url: '../../static/img/wx.png',
+										dx: bgObj.width * 0.05,
+										dy: bgObj.height - bgObj.width * 0.25,
+										infoCallBack(imageInfo) {
+											let scale = bgObj.width * 0.2 / imageInfo
+													.height;
+											return {
+												circleSet: {
+													x: imageInfo.width * scale / 2,
+													y: bgObj.width * 0.2 / 2,
+													r: bgObj.width * 0.2 / 2
+												}, // 圆形图片 , 若circleSet与roundRectSet一同设置 优先circleSet设置
+												dWidth: imageInfo.width *
+														scale, // 因为设置了圆形图片 所以要乘以2
+												dHeight: bgObj.width * 0.2,
+											}
+										}
+									}
+								]);
+							})
+						},
+						setCanvasWH: ({
+										  bgObj,
+										  type,
+										  bgScale
+									  }) => { // 为动态设置画布宽高的方法，
+							this.poster = bgObj;
+						}
+					});
+					_app.log('海报生成成功, 时间:' + new Date() + '， 临时路径: ' + d.poster.tempFilePath)
+					this.poster.finalPath = d.poster.tempFilePath;
+					this.qrShow = true;
+
+				} catch (e) {
+					_app.hideLoading();
+					_app.showToast(JSON.stringify(e));
+					console.log(JSON.stringify(e));
+				}
 			},
-			hideModal(e) {
-				this.modalName = null
+			// 分享小程序
+			async onShareAppMessage(res) {
+				if (res.from === 'button') { // 来自页面内分享按钮
+					console.log(res.target)
+				}
+				this.is_share_show = true;
+				this.qrShow = false;
+				return await this.commonShareMessage();
 			},
-			// 触发方法
+			async onShareTimeline(res) {
+				if (res.from === 'button') { // 来自页面内分享按钮
+					console.log(res.target)
+				}
+				this.is_share_show = true;
+				return await this.commonShareMessage();
+			},
+			commonShareMessage() {
+				return {
+					title: '白嫖资源就是香',
+					path: '/pages/index/index',
+					imageUrl: this.poster.finalPath,
+				}
+			},
+			// 复制触发方法
 			copy() {
 				let content = this.downloadUrl // 复制内容，必须字符串，数字需要转换为字符串
 				// #ifdef H5
 				const result = h5Copy(content)
 				if (result === false) {
 					uni.showToast({
-						title:'不支持',
-						icon:'none'
+						title: '不支持',
+						icon: 'none'
 					})
 				} else {
 					uni.showToast({
-						title:'复制成功',
-						icon:'none'
+						title: '复制成功',
+						icon: 'none'
 					})
 				}
 				// #endif
@@ -215,14 +352,16 @@
 				// #ifdef MP-WEIXIN
 				uni.setClipboardData({
 					data: content,//要被复制的内容
-					success:()=>{//复制成功的回调函数
+					success: () => {//复制成功的回调函数
 						uni.showToast({//提示
-							title:'复制成功',
-							icon:'none'
+							title: '复制成功',
+							icon: 'none'
 						})
 					}
 				});
 				// #endif
+				this.cpShow = false;
+				this.downloadUrl = null;
 
 			}
 		}
@@ -367,6 +506,92 @@
 		padding: 300rpx 0 70rpx;
 	}
 
+	.hideCanvasView {
+		position: relative;
+	}
+
+	.hideCanvas {
+		position: fixed;
+		top: -99999upx;
+		left: -99999upx;
+		z-index: -99999;
+	}
+
+	.flex_row_c_c {
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.modalView {
+		width: 100%;
+		height: 100%;
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		opacity: 0;
+		outline: 0;
+		transform: scale(1.2);
+		perspective: 2500upx;
+		background: rgba(0, 0, 0, 0.6);
+		transition: all .3s ease-in-out;
+		pointer-events: none;
+		backface-visibility: hidden;
+		z-index: 999;
+	}
+
+	.modalView.show {
+		opacity: 1;
+		transform: scale(1);
+		pointer-events: auto;
+	}
+
+	.flex_column {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.backgroundColor-white {
+		background-color: white;
+	}
+
+	.border_radius_10px {
+		border-radius: 10px;
+	}
+
+	.padding1vh {
+		padding: 1vh;
+	}
+
+	.posterImage {
+		width: 60vw;
+	}
+
+	.flex_row {
+		display: flex;
+		flex-direction: row;
+	}
+
+	.marginTop2vh {
+		margin-top: 2vh;
+	}
+
+	.blueBtn {
+		width: 500rpx;
+		margin: 50rpx auto;
+		display: block;
+		line-height: 80rpx;
+	}
+
+	.cu-dialog {
+		background: #FFFFFF;
+		overflow: visible;
+		padding: 300rpx 0 70rpx;
+	}
+
 	.modal_bg {
 		width: 100%;
 		height: 400rpx;
@@ -380,7 +605,8 @@
 	.modal_main {
 		background-color: #FFFFFF;
 	}
-	.cu-list.menu-avatar>.cu-item .action {
+
+	.cu-list.menu-avatar > .cu-item .action {
 		width: 120upx;
 		text-align: center
 	}
