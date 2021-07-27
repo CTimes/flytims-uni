@@ -23,13 +23,6 @@
 				"navigationBarTitleText": "",
 				"navigationStyle": "custom"
 			}
-		}, {
-			"path": "pages/books/design",
-			"style": {
-				"navigationBarTitleText": "",
-				"enablePullDownRefresh": false
-			}
-
 		}
 	],
 	"globalStyle": {

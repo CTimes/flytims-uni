@@ -52,16 +52,10 @@
                         toPage: '',
 						color: ''
 					},
-					// {
-					// 	title: 'voice',
-					// 	name: '有声读书',
-                    //     toPage: '/pages/books/voice',
-					// 	color: ''
-					// },
 					{
 						title: 'books',
 						name: '有声读书',
-					    toPage: '/pages/books/design',
+                        toPage: '/pages/books/voice',
 						color: ''
 					},
 					{
