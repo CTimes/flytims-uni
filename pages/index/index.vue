@@ -55,7 +55,13 @@
 					{
 						title: 'books',
 						name: '有声读书',
-                        toPage: '/pages/books/voice',
+						toPage: '/pages/books/book',
+						color: ''
+					},
+					{
+						title: 'search',
+						name: '搜索',
+						toPage: '/pages/books/bookSearch',
 						color: ''
 					},
 					{

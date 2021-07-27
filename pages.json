@@ -11,20 +11,31 @@
 			}
 		},
 		{
-			"path": "pages/books/voice",
-			"style": {
-				"navigationBarTitleText": "",
-				"navigationStyle": "custom"
-			}
-		},
-		{
 			"path": "pages/books/about",
 			"style": {
 				"navigationBarTitleText": "",
 				"navigationStyle": "custom"
 			}
 		}
-	],
+	    ,{
+            "path" : "pages/books/book",
+            "style" :
+            {
+                "navigationBarTitleText": "",
+				"navigationStyle": "custom"
+            }
+
+        }
+        ,{
+            "path" : "pages/books/bookSearch",
+            "style" :
+            {
+                "navigationBarTitleText": "",
+				"navigationStyle": "custom"
+            }
+
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
