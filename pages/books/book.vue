@@ -159,9 +159,9 @@
 			async shareFc(imgUrl,download) {
 				try {
 					this.downloadUrl = download;
-					if(!imgUrl){
-						imgUrl = '../../static/img/bj.png';
-					}
+					// if(!imgUrl){
+						imgUrl = '../../static/img/xcx.png';
+					// }
 					_app.log('准备生成:' + new Date())
 					const d = await getSharePoster({
 						_this: this, //若在组件中使用 必传

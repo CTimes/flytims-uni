@@ -5,14 +5,6 @@
 			console.log('App Launch')
 			uni.getSystemInfo({ // 自定义导航条设置
 				success: function(e) {
-					// #ifndef MP
-					Vue.prototype.StatusBar = e.statusBarHeight;
-					if (e.platform == 'android') {
-						Vue.prototype.CustomBar = e.statusBarHeight + 50;
-					} else {
-						Vue.prototype.CustomBar = e.statusBarHeight + 45;
-					};
-					// #endif
 					// #ifdef MP-WEIXIN
 					Vue.prototype.StatusBar = e.statusBarHeight;
 					let custom = wx.getMenuButtonBoundingClientRect();

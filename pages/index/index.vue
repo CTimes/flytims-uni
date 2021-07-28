@@ -53,21 +53,9 @@
 						color: ''
 					},
 					{
-						title: 'books',
-						name: '有声读书',
-						toPage: '/pages/books/book',
-						color: ''
-					},
-					{
 						title: 'search',
 						name: '搜索',
 						toPage: '/pages/books/bookSearch',
-						color: ''
-					},
-					{
-						title: 'about',
-						name: '关于',
-						toPage: '/pages/books/about',
 						color: ''
 					}
 				]

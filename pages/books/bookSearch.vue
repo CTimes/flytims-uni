@@ -43,6 +43,7 @@
 						this.isHaveBook = true;
 					}
 				}
+				console.log(this.isHaveBook)
 				if(this.isHaveBook){
 					this.$u.route('/pages/books/book', {
 						name: value
