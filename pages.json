@@ -25,8 +25,20 @@
 				"navigationBarTitleText": "",
 				"navigationStyle": "custom"
 			}
-        }
-    ],
+        },
+		{
+			"path": "pages/timeline",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/bookIndex",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		}
+	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",

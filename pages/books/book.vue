@@ -27,7 +27,7 @@
 				</view>
 			</template>
 			<template v-slot:right="{rightList}">
-				<view class="demo-warter" v-for="(item, index) in rightList" :key="index" @click="seeImg(item.image)">
+				<view class="demo-warter" v-for="(item, index) in rightList" :key="index" @click="shareFc(item.image,item.download)">
 					<u-lazy-load threshold="-450" border-radius="10" :image="item.image" :index="index"></u-lazy-load>
 					<view class="demo-tag">
 						<view class="demo-tag-owner">
@@ -250,7 +250,7 @@
 			},
 			commonShareMessage() {
 				return {
-					title: '白嫖资源就是香',
+					title: 'bp资源就是香',
 					path: '/pages/index/index',
 					imageUrl: this.poster.finalPath,
 				}
